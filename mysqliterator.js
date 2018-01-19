@@ -5,7 +5,7 @@ const mysql = require('mysql')
 const sqlHelper = require('./sql')
 const R = require('ramda')
 
-const MysqlIterator = (db, options) => {
+function MysqlIterator(db, options) {
   let query = []
   const start = R.gt(R.length(options.start), 0)
     ? mysql.escape(options.start)
@@ -20,9 +20,11 @@ const MysqlIterator = (db, options) => {
   this._stream = new PassThrough({
     objectMode: true
   })
-  this._once('end', function() {
-    self._endEmitted = true
+
+  this._stream.once('end', () => {
+    this._endEmitted = true
   })
+
   query.push('SELECT * from ' + db.table)
 
   if (R.and(start, end)) {
@@ -32,17 +34,60 @@ const MysqlIterator = (db, options) => {
   } else if (end) {
     query.push('WHERE `key` >= ' + end)
   }
-  query.push('ORDER BY `key` ' + options.reverse ? 'DESC' : 'ASC')
+  query.push(`ORDER BY \`key\` ${options.reverse ? 'DESC' : ''}`)
 
   if (R.gt(options.limit, -1)) {
     query.push('LIMIT ' + options.limit)
   }
 
   db._streamingQuery(query.join('\n'), (err, s) => {
+    if (err) {
+      return console.log(err)
+    }
     // what is this for?
-    this._foobar = s
+    //this._foobar = s
     s.pipe(this._stream)
+    // s.once('close', function() {
+    //   throw new Error('CLOSE')
+    // })
   })
+}
+
+util.inherits(MysqlIterator, AbstractIterator)
+
+MysqlIterator.prototype._next = function(callback) {
+  var self = this,
+    obj = this._stream.read(),
+    onReadable = function() {
+      self._stream.removeListener('end', onEnd)
+      self._next(callback)
+    },
+    onEnd = function() {
+      self._stream.removeListener('readable', onReadable)
+      callback()
+    },
+    key,
+    value
+
+  if (this._endEmitted) callback()
+  else if (obj === null) {
+    this._stream.once('readable', onReadable)
+
+    this._stream.once('end', onEnd)
+  } else {
+    key = obj.key
+    if (!this._keyAsBuffer) key = key.toString()
+
+    value = obj.value
+    if (!this._valueAsBuffer) value = value.toString()
+
+    callback(null, key, value)
+  }
+}
+
+MysqlIterator.prototype._end = function(callback) {
+  this._stream.end()
+  callback()
 }
 
 module.exports = MysqlIterator
