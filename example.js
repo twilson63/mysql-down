@@ -13,7 +13,7 @@ db.put(1, { bar: 'bam' }).then(() => {
 })
 
 db
-  .createReadStream()
+  .createReadStream({ gt: 1 })
   .on('data', data => {
     console.log('key', data.key.toString())
     console.log('value', data.value)

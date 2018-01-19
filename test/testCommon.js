@@ -1,3 +1,6 @@
+const format = require('format-number')
+const padLeft = format({ leftPad: 2 })
+
 const mysql = require('mysql'),
   connection = mysql.createConnection({
     user: 'root',
@@ -38,6 +41,7 @@ var dbidx = 0,
             })
           }
           if (key == +key) key = +key
+          key = (key < 10 ? '0' : '') + key
           data.push({ key: key, value: value })
           process.nextTick(next)
         })

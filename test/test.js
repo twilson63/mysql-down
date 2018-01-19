@@ -24,11 +24,11 @@ require('abstract-leveldown/abstract/close-test').close(
   testCommon
 )
 
-// require('abstract-leveldown/abstract/iterator-test').all(
-//   MysqlDOWN,
-//   test,
-//   testCommon
-// )
+require('abstract-leveldown/abstract/iterator-test').all(
+  MysqlDOWN,
+  test,
+  testCommon
+)
 
 require('abstract-leveldown/abstract/chained-batch-test').all(
   MysqlDOWN,
@@ -46,11 +46,11 @@ require('abstract-leveldown/abstract/approximate-size-test').args(
   testCommon
 )
 
-// require('abstract-leveldown/abstract/ranges-test').all(
-//   MysqlDOWN,
-//   test,
-//   testCommon
-// )
+require('abstract-leveldown/abstract/ranges-test').all(
+  MysqlDOWN,
+  test,
+  testCommon
+)
 
 require('abstract-leveldown/abstract/batch-test').all(
   MysqlDOWN,

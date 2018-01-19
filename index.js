@@ -107,6 +107,7 @@ MysqlDOWN.prototype._close = function(cb) {
 }
 
 MysqlDOWN.prototype._put = function(key, value, options, cb) {
+  console.log(JSON.stringify({ key: key, value: value }))
   setImmediate(() => {
     this._query(sqlHelper.insertInto(this.table, key, value), cb)
   })
