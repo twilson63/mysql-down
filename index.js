@@ -73,7 +73,6 @@ MysqlDOWN.prototype._streamingQuery = function(query, callback) {
 
     stream = connection.query(query).stream({ highWaterMark: 100 })
 
-    console.log('streaming query')
     stream.once('end', () => {
       connection.release()
     })
@@ -83,10 +82,8 @@ MysqlDOWN.prototype._streamingQuery = function(query, callback) {
 }
 
 MysqlDOWN.prototype._parseValue = function(array, asBuffer) {
-  asBuffer = R.isNil(asBuffer) ? true : asBuffer
-  return asBuffer
-    ? R.prop('value', R.head(array))
-    : R.toString(R.prop('value', R.head(array)))
+  asBuffer = asBuffer === undefined ? true : asBuffer
+  return asBuffer ? array[0].value : array[0].value.toString()
 }
 
 MysqlDOWN.prototype._open = function(options, cb) {
@@ -124,6 +121,7 @@ MysqlDOWN.prototype._get = function(key, options, cb) {
       if (err) {
         return cb(err)
       }
+
       cb(null, this._parseValue(obj, options.asBuffer))
     })
   })

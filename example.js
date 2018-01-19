@@ -8,9 +8,10 @@ const db = levelup(
   })
 )
 
-db.put('foo5', { bar: 'bam' }).then(() => {
-  db.get('foo5').then(v => console.log(v.bar))
+db.put(1, { bar: 'bam' }).then(() => {
+  db.get(1).then(v => console.log(v.bar))
 })
+
 db
   .createReadStream()
   .on('data', data => {
