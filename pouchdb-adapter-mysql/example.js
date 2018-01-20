@@ -5,16 +5,7 @@ const db = PouchDB('blahhh', {
   prefix: 'foo/'
 })
 
-db.allDocs({}, () => {
-  db.destroy(err => {
-    console.log(err)
-  })
-})
 
-// db
-//   .put({ _id: 'boop3', hello: 'world' })
-//   .then(res => console.log(res))
-//   .catch(err => console.log(err.message))
-// db
-//   .allDocs({ include_docs: true })
-//   .then(res => console.log(JSON.stringify(res, null, 2)))
+db
+  .allDocs({ include_docs: true })
+  .then(res => console.log(JSON.stringify(res, null, 2)))
