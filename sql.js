@@ -47,3 +47,9 @@ function deleteFrom (tableName, key) {
 DELETE FROM ${tableName} WHERE \`key\` = ${key}
   `)
 }
+
+function dropTable (tableName) {
+  return R.trim(`
+DROP TABLE ${tableName};
+  `)
+}

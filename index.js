@@ -8,6 +8,8 @@ const MysqlIterator = require('./mysqliterator')
 const setImmediate = global.setImmediate || process.nextTick
 const R = require('ramda')
 
+let instances = {}
+
 function MysqlDOWN (location) {
   if (!(this instanceof MysqlDOWN)) {
     return new MysqlDOWN(location)
@@ -61,6 +63,8 @@ function MysqlDOWN (location) {
   if (!this.table) {
     this.table = R.head(R.tail(parsedPath))
   }
+  // add instances to cache
+  instances[this.table] = this
 }
 
 util.inherits(MysqlDOWN, AbstractLevelDOWN)
@@ -168,9 +172,15 @@ MysqlDOWN.prototype._iterator = function (options) {
   return new MysqlIterator(this, options)
 }
 
-MysqlDOWN.prototype.destroy = function (name, cb) {
+MysqlDOWN.prototype._destroy = function (cb) {
+  this._query(sqlHelper.dropTable(this.table), cb)
+}
+
+MysqlDOWN.destroy = function (name, cb) {
   // might need to drop sql table
-  setImmediate(() => cb(null))
+  // the question is which database?
+  const db = instances(name)
+  db._destroy(cb)
 }
 
 module.exports = MysqlDOWN

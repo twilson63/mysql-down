@@ -5,6 +5,7 @@ const db = PouchDB('bar', {
   prefix: 'foo/'
 })
 
+console.log(db.destroy)
 // db
 //   .put({ _id: 'boop3', hello: 'world' })
 //   .then(res => console.log(res))
