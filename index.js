@@ -179,7 +179,7 @@ MysqlDOWN.prototype._destroy = function (cb) {
 MysqlDOWN.destroy = function (name, cb) {
   // might need to drop sql table
   // the question is which database?
-  const db = instances(name)
+  const db = instances[name]
   db._destroy(cb)
 }
 

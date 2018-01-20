@@ -1,7 +1,6 @@
 const CoreLevelPouch = require('pouchdb-adapter-leveldb-core')
 
 const mysqldown = require('@twilson63/mysql-down')
-//const mysqldown = require('../')
 
 function MysqlDownPouch(opts, callback) {
   var _opts = Object.assign(
