@@ -5,7 +5,7 @@ const mysql = require('mysql')
 const sqlHelper = require('./sql')
 const R = require('ramda')
 
-function MysqlIterator(db, options) {
+function MysqlIterator (db, options) {
   let query = []
   let start = R.gt(R.length(options.start), 0)
     ? mysql.escape(options.start)
@@ -76,7 +76,7 @@ function MysqlIterator(db, options) {
       return console.log(err)
     }
     // what is this for?
-    //this._foobar = s
+    // this._foobar = s
     s.pipe(this._stream)
     // s.once('close', function() {
     //   throw new Error('CLOSE')
@@ -86,14 +86,14 @@ function MysqlIterator(db, options) {
 
 util.inherits(MysqlIterator, AbstractIterator)
 
-MysqlIterator.prototype._next = function(callback) {
+MysqlIterator.prototype._next = function (callback) {
   var self = this,
     obj = this._stream.read(),
-    onReadable = function() {
+    onReadable = function () {
       self._stream.removeListener('end', onEnd)
       self._next(callback)
     },
-    onEnd = function() {
+    onEnd = function () {
       self._stream.removeListener('readable', onReadable)
       callback()
     },
@@ -116,7 +116,7 @@ MysqlIterator.prototype._next = function(callback) {
   }
 }
 
-MysqlIterator.prototype._end = function(callback) {
+MysqlIterator.prototype._end = function (callback) {
   this._stream.end()
   callback()
 }
