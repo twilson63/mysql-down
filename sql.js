@@ -8,8 +8,8 @@ module.exports = {
   deleteFrom
 }
 
-function createDatabaseAndTable (databaseName, tableName) {
-  return R.trim(`
+function createDatabaseAndTable(databaseName, tableName) {
+  const sql = R.trim(`
 CREATE DATABASE IF NOT EXISTS ${databaseName};
 USE ${databaseName};
 CREATE TABLE IF NOT EXISTS ${tableName} (
@@ -19,9 +19,11 @@ CREATE TABLE IF NOT EXISTS ${tableName} (
   UNIQUE (\`key\`(767))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 `)
+  //console.log(sql)
+  return sql
 }
 
-function insertInto (tableName, key, value) {
+function insertInto(tableName, key, value) {
   const escaped = mysql.escape({
     key,
     value
@@ -32,14 +34,14 @@ INSERT INTO ${tableName} SET ${escaped}
 ON DUPLICATE KEY UPDATE ${escaped}`)
 }
 
-function selectByKey (tableName, key) {
+function selectByKey(tableName, key) {
   key = mysql.escape(key)
   return R.trim(`
 SELECT \`value\` FROM ${tableName} WHERE \`key\` = ${key}
   `)
 }
 
-function deleteFrom (tableName, key) {
+function deleteFrom(tableName, key) {
   key = mysql.escape(key)
   return R.trim(`
 DELETE FROM ${tableName} WHERE \`key\` = ${key}

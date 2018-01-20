@@ -1,0 +1,11 @@
+{
+  "name": "pouchdb-adapter-mysql",
+  "version": "1.0.0",
+  "main": "adapter.js",
+  "license": "MIT",
+  "dependencies": {
+    "@twilson63/mysql-down": "twilson63/mysql-down",
+    "pouchdb-adapter-leveldb-core": "^6.4.1",
+    "pouchdb-core": "^6.4.1"
+  }
+}
