@@ -50,6 +50,13 @@ db
   })
 ```
 
+## SSL Support
+
+In order to get this levelDown adapter to work with and encrypted ssl connection,
+you need to provide the ssl ca certificate in the env var `MYSQL_SSL`
+
+When provided MysqlDown will provide and encrypted connection.
+
 ## Testing
 
 Runs the AbstractLevelDOWN Test Suite
@@ -65,7 +72,6 @@ Welcome
 ## TODOS
 
 * Run PouchDB Test Suite
-* Test with TLS MySQL Connections
 
 ## License
 

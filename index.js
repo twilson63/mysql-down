@@ -19,6 +19,7 @@ function MysqlDOWN (location) {
     this.table = location
     location = process.env.MYSQL_URI
   }
+
   const parsed = R.evolve(
     {
       hostname: v => (R.isNil(v) ? 'localhost' : v),
@@ -46,6 +47,14 @@ function MysqlDOWN (location) {
     user: user,
     password: password,
     multipleStatements: true
+  }
+
+  if (process.env.MYSQL_SSL) {
+    this.connInfo = merge(this.connInfo, {
+      ssl: {
+        ca: process.env.MYSQL_SSL
+      }
+    })
   }
 
   this.database = R.head(parsedPath)
