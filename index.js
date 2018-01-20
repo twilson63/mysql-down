@@ -8,7 +8,7 @@ const MysqlIterator = require('./mysqliterator')
 const setImmediate = global.setImmediate || process.nextTick
 const R = require('ramda')
 
-function MysqlDOWN (location) {
+function MysqlDOWN(location) {
   if (!(this instanceof MysqlDOWN)) {
     return new MysqlDOWN(location)
   }
@@ -50,8 +50,8 @@ function MysqlDOWN (location) {
 
 util.inherits(MysqlDOWN, AbstractLevelDOWN)
 
-MysqlDOWN.prototype._query = function (query, callback) {
-  this.pool.getConnection(function (err, connection) {
+MysqlDOWN.prototype._query = function(query, callback) {
+  this.pool.getConnection(function(err, connection) {
     if (err) {
       return callback(err)
     }
@@ -63,8 +63,8 @@ MysqlDOWN.prototype._query = function (query, callback) {
   })
 }
 
-MysqlDOWN.prototype._streamingQuery = function (query, callback) {
-  this.pool.getConnection(function (err, connection) {
+MysqlDOWN.prototype._streamingQuery = function(query, callback) {
+  this.pool.getConnection(function(err, connection) {
     if (err) {
       return callback(err)
     }
@@ -81,12 +81,12 @@ MysqlDOWN.prototype._streamingQuery = function (query, callback) {
   })
 }
 
-MysqlDOWN.prototype._parseValue = function (array, asBuffer) {
+MysqlDOWN.prototype._parseValue = function(array, asBuffer) {
   asBuffer = asBuffer === undefined ? true : asBuffer
   return asBuffer ? array[0].value : array[0].value.toString()
 }
 
-MysqlDOWN.prototype._open = function (options, cb) {
+MysqlDOWN.prototype._open = function(options, cb) {
   this.pool = mysql.createPool(this.connInfo)
 
   this._query(
@@ -102,18 +102,18 @@ MysqlDOWN.prototype._open = function (options, cb) {
   )
 }
 
-MysqlDOWN.prototype._close = function (cb) {
+MysqlDOWN.prototype._close = function(cb) {
   this.pool.end(cb)
 }
 
-MysqlDOWN.prototype._put = function (key, value, options, cb) {
+MysqlDOWN.prototype._put = function(key, value, options, cb) {
   console.log(JSON.stringify({ key: key, value: value }))
   setImmediate(() => {
     this._query(sqlHelper.insertInto(this.table, key, value), cb)
   })
 }
 
-MysqlDOWN.prototype._get = function (key, options, cb) {
+MysqlDOWN.prototype._get = function(key, options, cb) {
   setImmediate(() => {
     this._query(sqlHelper.selectByKey(this.table, key), (err, obj) => {
       if (R.and(R.not(err), R.equals(0, R.length(obj)))) {
@@ -128,13 +128,13 @@ MysqlDOWN.prototype._get = function (key, options, cb) {
   })
 }
 
-MysqlDOWN.prototype._del = function (key, options, callback) {
+MysqlDOWN.prototype._del = function(key, options, callback) {
   setImmediate(() => {
     this._query(sqlHelper.deleteFrom(this.table, key), callback)
   })
 }
 
-MysqlDOWN.prototype._batch = function (array, options, cb) {
+MysqlDOWN.prototype._batch = function(array, options, cb) {
   const query = R.join(
     ';\n',
     R.map(elm => {
@@ -149,7 +149,7 @@ MysqlDOWN.prototype._batch = function (array, options, cb) {
   setImmediate(() => this._query(query, cb))
 }
 
-MysqlDOWN.prototype._iterator = function (options) {
+MysqlDOWN.prototype._iterator = function(options) {
   return new MysqlIterator(this, options)
 }
 
