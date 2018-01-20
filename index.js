@@ -168,4 +168,9 @@ MysqlDOWN.prototype._iterator = function (options) {
   return new MysqlIterator(this, options)
 }
 
+MysqlDOWN.prototype.destroy = function (name, cb) {
+  // might need to drop sql table
+  setImmediate(() => cb(null))
+}
+
 module.exports = MysqlDOWN
