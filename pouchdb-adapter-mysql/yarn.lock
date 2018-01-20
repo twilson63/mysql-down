@@ -3,8 +3,8 @@
 
 
 "@twilson63/mysql-down@twilson63/mysql-down":
-  version "1.0.5"
-  resolved "https://codeload.github.com/twilson63/mysql-down/tar.gz/3df8dcf44c186db4af03dd25ef1a738947d5e205"
+  version "1.0.6"
+  resolved "https://codeload.github.com/twilson63/mysql-down/tar.gz/7056addfb68952a7338fc7a920a9bd4794a74360"
   dependencies:
     abstract-leveldown "^3.0.0"
     mysql "^2.15.0"

@@ -5,9 +5,12 @@ const db = PouchDB('blahhh', {
   prefix: 'foo/'
 })
 
-db.destroy(err => {
-  console.log(err)
+db.allDocs({}, () => {
+  db.destroy(err => {
+    console.log(err)
+  })
 })
+
 // db
 //   .put({ _id: 'boop3', hello: 'world' })
 //   .then(res => console.log(res))

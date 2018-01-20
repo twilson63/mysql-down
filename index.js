@@ -173,13 +173,16 @@ MysqlDOWN.prototype._iterator = function (options) {
 }
 
 MysqlDOWN.prototype._destroy = function (cb) {
-  this._query(sqlHelper.dropTable(this.table), cb)
+  setImmediate(() => {
+    if (!this.pool._closed) {
+      this._query(sqlHelper.dropTable(this.table), cb)
+    }
+  })
 }
 
 MysqlDOWN.destroy = function (name, cb) {
-  // might need to drop sql table
-  // the question is which database?
-  const db = instances[name]
+  const table = R.nth(-1, R.split('/',name))
+  const db = instances[table]
   db._destroy(cb)
 }
 

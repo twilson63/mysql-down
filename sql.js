@@ -5,7 +5,8 @@ module.exports = {
   createDatabaseAndTable,
   insertInto,
   selectByKey,
-  deleteFrom
+  deleteFrom,
+  dropTable
 }
 
 function createDatabaseAndTable (databaseName, tableName) {
