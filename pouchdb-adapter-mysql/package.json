@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-mysql",
-  "version": "6.4.3",
+  "version": "6.4.4",
   "main": "adapter.js",
   "license": "MIT",
   "dependencies": {

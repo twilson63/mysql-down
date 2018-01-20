@@ -176,6 +176,8 @@ MysqlDOWN.prototype._destroy = function (cb) {
   setImmediate(() => {
     if (!this.pool._closed) {
       this._query(sqlHelper.dropTable(this.table), cb)
+    } else {
+      cb(null)
     }
   })
 }
