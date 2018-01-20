@@ -10,13 +10,10 @@ function MysqlIterator(db, options) {
   let start = R.gt(R.length(options.start), 0)
     ? mysql.escape(options.start)
     : null
-  if (R.gt(R.length(options.gte), 0)) {
-    start = mysql.escape(options.gte)
-  }
+  let gte = R.gt(R.length(options.gte), 0) ? mysql.escape(options.gte) : null
+
   let end = R.gt(R.length(options.end), 0) ? mysql.escape(options.end) : null
-  if (R.gt(R.length(options.lte), 0)) {
-    end = mysql.escape(options.lte)
-  }
+  let lte = R.gt(R.length(options.lte), 0) ? mysql.escape(options.lte) : null
 
   let gt = R.gt(R.length(options.gt), 0) ? mysql.escape(options.gt) : null
 
@@ -35,42 +32,28 @@ function MysqlIterator(db, options) {
     this._endEmitted = true
   })
 
-  // don't know if this will always work
-  if (R.and(options.reverse, R.and(R.or(start, gt), R.not(R.or(end, lt))))) {
-    if (R.and(start, R.not(end))) {
-      end = start
-      start = null
-    }
-    if (R.and(gt, R.not(lt))) {
-      lt = gt
-      gt = null
-    }
-  } else if (
-    R.and(options.reverse, R.and(R.or(end, lt), R.not(R.or(start, gt))))
-  ) {
-    if (R.and(end, R.not(start))) {
-      start = end
-      end = null
-    }
-    if (R.and(lt, R.not(gt))) {
-      gt = lt
-      lt = null
-    }
-  } else if (options.reverse) {
-    let placeholder = end
-    end = start
-    start = placeholder
-  }
-
   query.push('SELECT * from ' + db.table)
 
   if (R.or(start, end)) {
+    if (options.reverse) {
+      let placeholder = end
+      end = start
+      start = placeholder
+    }
     if (R.and(start, end)) {
       query.push('WHERE `key` <= ' + end + ' AND `key` >= ' + start)
     } else if (end) {
       query.push('WHERE `key` <= ' + end)
     } else if (start) {
       query.push('WHERE `key` >= ' + start)
+    }
+  } else if (R.or(gte, lte)) {
+    if (R.and(gte, lte)) {
+      query.push('WHERE `key` <= ' + lte + ' AND `key` >= ' + gte)
+    } else if (lte) {
+      query.push('WHERE `key` <= ' + lte)
+    } else if (gte) {
+      query.push('WHERE `key` >= ' + gte)
     }
   } else if (R.or(gt, lt)) {
     if (R.and(gt, lt)) {
