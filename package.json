@@ -1,5 +1,5 @@
 {
-  "name": "mysql-down",
+  "name": "@twilson63/mysql-down",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
