@@ -1,6 +1,3 @@
-const format = require('format-number')
-const padLeft = format({ leftPad: 2 })
-
 const mysql = require('mysql'),
   connection = mysql.createConnection({
     user: 'root',

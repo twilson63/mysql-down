@@ -58,4 +58,9 @@ require('abstract-leveldown/abstract/batch-test').all(
   testCommon
 )
 
+test('last test', t => {
+  console.log('**** Done ****')
+  t.end()
+  process.exit(0)
+})
 //require('./custom-tests.js').all(MysqlDOWN, test, testCommon)
