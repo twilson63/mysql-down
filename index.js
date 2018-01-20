@@ -15,6 +15,10 @@ function MysqlDOWN (location) {
 
   AbstractLevelDOWN.call(this, location)
 
+  if (process.env.MYSQL_URI) {
+    this.table = location
+    location = process.env.MYSQL_URI
+  }
   const parsed = R.evolve(
     {
       hostname: v => (R.isNil(v) ? 'localhost' : v),
@@ -45,7 +49,9 @@ function MysqlDOWN (location) {
   }
 
   this.database = R.head(parsedPath)
-  this.table = R.tail(parsedPath)
+  if (!this.table) {
+    this.table = R.head(R.tail(parsedPath))
+  }
 }
 
 util.inherits(MysqlDOWN, AbstractLevelDOWN)

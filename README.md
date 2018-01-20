@@ -10,6 +10,22 @@ A Level Down Wrapper around MySQL
 npm install twilson63/mysql-down
 ```
 
+## Connections
+
+When connecting you can supply a connection uri or `[db]/[table]` combination,
+if you just supply the db/table then it will assume the connection uri is the
+following `mysql://root@localhost:3306/db/table`.
+
+You can also supply the connection uri via env variables
+
+MYSQL_URI=mysql://root@localhost:3306/db?.... node server.js
+
+> If MYSQL_URI is provided, then it will serve as the connection and the location
+> will serve as the datastore name
+
+> So if you wanted to connect to remote mysql you would provide the URI via env
+> and then call `db = MysqlDOWN('foo')` to represent the table name in the database.
+
 ## Example
 
 ```
