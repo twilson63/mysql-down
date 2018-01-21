@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@twilson63/mysql-down@twilson63/mysql-down":
-  version "1.0.8"
-  resolved "https://codeload.github.com/twilson63/mysql-down/tar.gz/fae8e6071b96a047c08e59249608237cbff18283"
+"@twilson63/mysql-down@github:twilson63/mysql-down", "@twilson63/mysql-down@twilson63/mysql-down":
+  version "1.0.10"
+  resolved "https://codeload.github.com/twilson63/mysql-down/tar.gz/7cb85ebe969c9637c06fd0977777b0e9b4cc643d"
   dependencies:
     abstract-leveldown "^3.0.0"
     mysql "^2.15.0"
