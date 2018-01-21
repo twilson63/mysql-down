@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-adapter-mysql",
-  "version": "6.4.4",
+  "version": "6.4.5",
   "main": "adapter.js",
   "license": "MIT",
   "dependencies": {
@@ -9,11 +9,13 @@
     "pouchdb-core": "^6.4.1"
   },
   "devDependencies": {
+    "faucet": "^0.0.1",
     "pouchdb-mapreduce": "^6.4.1",
+    "ramda": "^0.25.0",
     "tape": "^4.8.0"
   },
   "scripts": {
-    "test": "tape test/*_test.js"
+    "test": "tape test/*_test.js | faucet"
   },
   "keywords": [],
   "author": "Tom",
