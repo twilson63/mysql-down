@@ -8,9 +8,12 @@
     "pouchdb-adapter-leveldb-core": "^6.4.1",
     "pouchdb-core": "^6.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "pouchdb-mapreduce": "^6.4.1",
+    "tape": "^4.8.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/*_test.js"
   },
   "keywords": [],
   "author": "Tom",

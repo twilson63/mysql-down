@@ -72,12 +72,12 @@ util.inherits(MysqlDOWN, AbstractLevelDOWN)
 MysqlDOWN.prototype._query = function (query, callback) {
   this.pool.getConnection(function (err, connection) {
     if (err) {
-      return callback(err)
+      return callback ? callback(err) : null
     }
     connection.query(query, (err, result) => {
       connection.release()
 
-      callback(err, result)
+      callback ? callback(err, result) : null
     })
   })
 }
@@ -122,11 +122,12 @@ MysqlDOWN.prototype._open = function (options, cb) {
 }
 
 MysqlDOWN.prototype._close = function (cb) {
-  this.pool.end(cb)
+  setImmediate(() => {
+    cb ? this.pool.end(cb) : cb(null)
+  })
 }
 
 MysqlDOWN.prototype._put = function (key, value, options, cb) {
-  console.log(JSON.stringify({ key: key, value: value }))
   setImmediate(() => {
     this._query(sqlHelper.insertInto(this.table, key, value), cb)
   })
@@ -183,7 +184,7 @@ MysqlDOWN.prototype._destroy = function (cb) {
 }
 
 MysqlDOWN.destroy = function (name, cb) {
-  const table = R.nth(-1, R.split('/',name))
+  const table = R.nth(-1, R.split('/', name))
   const db = instances[table]
   db._destroy(cb)
 }

@@ -31,7 +31,7 @@ function MysqlIterator (db, options) {
   this._stream.once('end', () => {
     this._endEmitted = true
   })
-
+  db.table = R.replace(/-/g, '__', db.table)
   query.push('SELECT * from ' + db.table)
 
   if (R.or(start, end)) {
@@ -79,7 +79,8 @@ function MysqlIterator (db, options) {
     // this._foobar = s
     s.pipe(this._stream)
     // s.once('close', function() {
-    //   throw new Error('CLOSE')
+    //   console.log('release conn')
+    //   //throw new Error('CLOSE')
     // })
   })
 }
@@ -100,8 +101,9 @@ MysqlIterator.prototype._next = function (callback) {
     key,
     value
 
-  if (this._endEmitted) callback()
-  else if (obj === null) {
+  if (this._endEmitted) {
+    callback()
+  } else if (obj === null) {
     this._stream.once('readable', onReadable)
 
     this._stream.once('end', onEnd)
