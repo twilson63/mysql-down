@@ -16,7 +16,7 @@ function MysqlDOWN(location) {
   }
 
   AbstractLevelDOWN.call(this, location)
-
+  console.log(process.env.MYSQL_URI)
   if (process.env.MYSQL_URI) {
     this.table = location
     location = process.env.MYSQL_URI
@@ -40,7 +40,7 @@ function MysqlDOWN(location) {
   if (R.and(R.is(String, auth), R.contains(':', auth))) {
     auth = R.split(':', auth)
     user = R.head(auth)
-    password = R.or(R.tail(auth), '')
+    password = R.or(R.head(R.tail(auth)), '')
   }
 
   this.connInfo = {
@@ -52,9 +52,13 @@ function MysqlDOWN(location) {
   }
 
   if (process.env.MYSQL_SSL) {
-    this.connInfo = merge(this.connInfo, {
+    this.connInfo = R.merge(this.connInfo, {
+      ssl: process.env.MYSQL_SSL
+    })
+  } else if (process.env.MYSQL_SSL_CA) {
+    this.connInfo = R.merge(this.connInfo, {
       ssl: {
-        ca: process.env.MYSQL_SSL
+        ca: process.env.MYSQL_SSL_CA
       }
     })
   }
@@ -63,6 +67,7 @@ function MysqlDOWN(location) {
   if (!this.table) {
     this.table = R.head(R.tail(parsedPath))
   }
+
   // add instances to cache
   instances[this.table] = this
 }

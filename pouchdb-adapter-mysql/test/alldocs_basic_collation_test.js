@@ -8,11 +8,9 @@ const db = PouchDB('alldocs_collation', {
 })
 
 test('test basic collation', t => {
-  let docs = [
-    {_id: 'z', foo: 'z'},
-    {_id: 'a', foo: 'a'}
-  ]
-  db.bulkDocs({docs})
+  let docs = [{ _id: 'z', foo: 'z' }, { _id: 'a', foo: 'a' }]
+  db
+    .bulkDocs({ docs })
     .then(() => {
       return db.allDocs({
         startkey: 'z',

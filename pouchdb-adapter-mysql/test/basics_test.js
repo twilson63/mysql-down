@@ -104,7 +104,10 @@ test('bulk docs', t => {
 
 test('basic checks', t => {
   t.plan(7)
-  const db = PouchDB('basic-checks', { adapter: 'mysql', prefix: 'test/' })
+  const db = PouchDB('basic-checks', {
+    adapter: 'mysql',
+    prefix: 'test/'
+  })
   const doc = { _id: '0', a: 1, b: 1 }
 
   let updateSeq

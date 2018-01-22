@@ -52,10 +52,19 @@ db
 
 ## SSL Support
 
-In order to get this levelDown adapter to work with and encrypted ssl connection,
-you need to provide the ssl ca certificate in the env var `MYSQL_SSL`
+### Amazon RDS
 
-When provided MysqlDown will provide and encrypted connection.
+SSL Support for Amazon RDS is simple, just add the following environment var
+
+`MYSQL_SSL="Amazon RDS"`
+
+If you are not using Amazon, then you will need to provide an actual ca certificate:
+
+`MYSQL_SSL_CA=[certificate contents]`
+
+See https://github.com/mysqljs/mysql#ssl-options
+
+For more information.
 
 ## Testing
 
