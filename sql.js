@@ -9,7 +9,7 @@ module.exports = {
   dropTable
 }
 
-function createDatabaseAndTable(databaseName, tableName) {
+function createDatabaseAndTable (databaseName, tableName) {
   tableName = R.replace(/-/g, '__', tableName)
   const sql = R.trim(`
 CREATE DATABASE IF NOT EXISTS ${databaseName};
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS ${tableName} (
   return sql
 }
 
-function insertInto(tableName, key, value) {
+function insertInto (tableName, key, value) {
   const escaped = mysql.escape({
     key,
     value
@@ -35,7 +35,7 @@ INSERT INTO ${tableName} SET ${escaped}
 ON DUPLICATE KEY UPDATE ${escaped}`)
 }
 
-function selectByKey(tableName, key) {
+function selectByKey (tableName, key) {
   key = mysql.escape(key)
   tableName = R.replace(/-/g, '__', tableName)
   return R.trim(`
@@ -43,7 +43,7 @@ SELECT \`value\` FROM ${tableName} WHERE \`key\` = ${key}
   `)
 }
 
-function deleteFrom(tableName, key) {
+function deleteFrom (tableName, key) {
   key = mysql.escape(key)
   tableName = R.replace(/-/g, '__', tableName)
   return R.trim(`
@@ -51,7 +51,7 @@ DELETE FROM ${tableName} WHERE \`key\` = ${key}
   `)
 }
 
-function dropTable(tableName) {
+function dropTable (tableName) {
   tableName = R.replace(/-/g, '__', tableName)
   return R.trim(`
 DROP TABLE ${tableName};
