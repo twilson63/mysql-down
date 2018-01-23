@@ -66,6 +66,11 @@ function MysqlDOWN(location) {
   if (!this.table) {
     this.table = R.head(R.tail(parsedPath))
   }
+  if (process.env.DEBUG) {
+    console.log('connection', this.connInfo)
+    console.log('database', this.database)
+    console.log('table', this.table)
+  }
 
   // add instances to cache
   instances[this.table] = this
@@ -80,7 +85,9 @@ MysqlDOWN.prototype._query = function(query, callback) {
     }
     connection.query(query, (err, result) => {
       connection.release()
-
+      if (process.env.DEBUG) {
+        console.log('query', query)
+      }
       callback ? callback(err, result) : null
     })
   })
