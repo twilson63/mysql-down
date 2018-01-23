@@ -10,6 +10,8 @@ const R = require('ramda')
 
 let instances = {}
 
+const getTable = R.compose(R.nth(-1), R.split('/'))
+
 function MysqlDOWN (location) {
   if (!(this instanceof MysqlDOWN)) {
     return new MysqlDOWN(location)
@@ -17,7 +19,7 @@ function MysqlDOWN (location) {
 
   AbstractLevelDOWN.call(this, location)
   if (process.env.MYSQL_URI) {
-    this.table = location
+    this.table = getTable(location)
     location = process.env.MYSQL_URI
   }
 
