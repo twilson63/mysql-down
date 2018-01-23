@@ -135,10 +135,135 @@ test('basic checks', t => {
       return db.destroy()
     })
     .catch(err => {
-      console.log(err)
+      console.log('err', err)
+    })
+})
+
+test('Doc Validation', t => {
+  t.plan(2)
+  const bad_docs = [
+    { _zing: 4 },
+    { _zoom: 'hello' },
+    {
+      zane: 'goldfish',
+      _fan: 'something smells delicious'
+    },
+    { _bing: { 'wha?': 'soda can' } }
+  ]
+  db.bulkDocs({ docs: bad_docs }).catch(err => {
+    t.equal(err.name, 'doc_validation')
+    t.equal(err.message, 'Bad special document member: _zing')
+  })
+})
+
+test('Testing Valid Id', t => {
+  t.plan(2)
+  db
+    .post({
+      _id: 123,
+      test: 'somestuff'
+    })
+    .catch(err => {
+      t.ok(err)
+      t.equals(err.name, 'bad_request')
+    })
+})
+
+test('put doc without id should fail', t => {
+  t.plan(2)
+  db.put({ test: 'somestuff' }).catch(err => {
+    t.ok(err)
+    t.equals(err.message, '_id is required for puts')
+  })
+})
+
+test('put doc with bad reserved id', t => {
+  t.plan(3)
+  db
+    .put({
+      _id: '_i_test',
+      test: 'somestuff'
+    })
+    .catch(err => {
+      t.ok(err)
+      t.equals(err.status, 400)
+      t.equals(
+        err.message,
+        'Only reserved document ids may start with underscore.'
+      )
+    })
+})
+
+test('update_seq persists', t => {
+  t.plan(2)
+  let db = PouchDB('update_seq', {
+    adapter: 'mysql',
+    prefix: 'test/'
+  })
+
+  db
+    .post({ test: 'somestuff' })
+    .then(() => db.close())
+    .then(() => {
+      db = PouchDB('update_seq', {
+        adapter: 'mysql',
+        prefix: 'test/'
+      })
+      return db.info()
+    })
+    .then(info => {
+      t.notEquals(info.update_seq, 0)
+      t.equals(info.doc_count, 1)
+      return db.destroy()
+    })
+    .catch(err => {
+      console.log('err', err)
+    })
+})
+
+test('error when doc is not an object', t => {
+  t.plan(5)
+  var doc1 = [{ _id: 'foo' }, { _id: 'bar' }]
+  var doc2 = 'this is not an object'
+  db.post(doc1).catch(t.ok)
+  db.post(doc2).catch(t.ok)
+  db.put(doc1).catch(t.ok)
+  db.put(doc2).catch(t.ok)
+  db.bulkDocs({ docs: [doc1, doc2] }).catch(t.ok)
+})
+
+test('db info', t => {
+  t.plan(4)
+  let db = PouchDB('info', {
+    adapter: 'mysql',
+    prefix: 'test/'
+  })
+
+  db.info().then(info => {
+    t.equals(info.db_name, 'info')
+    t.equals(info.auto_compaction, false)
+    t.equals(info.adapter, 'mysql')
+    t.equals(info.doc_count, 0)
+    return db.destroy()
+  })
+})
+
+test('putting returns {ok: true}', t => {
+  t.plan(5)
+  db
+    .put({ _id: '_local/foo' })
+    .then(res => t.ok(res.ok))
+    .then(() => db.put({ _id: 'quux' }))
+    .then(res => t.ok(res.ok))
+    .then(() => db.bulkDocs([{ _id: '_local/bar' }, { _id: 'baz' }]))
+    .then(res => {
+      t.equals(res.length, 2)
+      t.ok(res[0].ok)
+      t.ok(res[1].ok)
     })
 })
 
 test('done', t => {
-  db.close(t.end)
+  db.destroy()
+  t.end()
 })

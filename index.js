@@ -16,7 +16,6 @@ function MysqlDOWN(location) {
   }
 
   AbstractLevelDOWN.call(this, location)
-  console.log(process.env.MYSQL_URI)
   if (process.env.MYSQL_URI) {
     this.table = location
     location = process.env.MYSQL_URI

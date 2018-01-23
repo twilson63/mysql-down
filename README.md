@@ -78,10 +78,6 @@ npm test
 
 Welcome
 
-## TODOS
-
-* Run PouchDB Test Suite
-
 ## License
 
 MIT
