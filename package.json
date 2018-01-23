@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "encoding-down": "^3.0.1",
+    "husky": "^0.15.0-rc.3",
     "levelup": "^2.0.1",
     "pouchdb": "^6.4.1",
     "pouchdb-monorepo": "github:pouchdb/pouchdb",
@@ -22,5 +23,9 @@
     "test-pouchdb": "./bin/test-pouchdb.sh"
   },
   "repository": "git@github.com:twilson63/mysql-down.git",
-  "author": "Tom Wilson <tom@jackhq.com>"
+  "author": "Tom Wilson <tom@jackhq.com>",
+  "husky": {
+    "pre-commit": "npm test",
+    "pre-push": "npm test"
+  }
 }
