@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@twilson63/mysql-down@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@twilson63/mysql-down/-/mysql-down-1.0.16.tgz#d08e9dda70055d306e63886c857ace2d17e20538"
+"@twilson63/mysql-down@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@twilson63/mysql-down/-/mysql-down-1.0.17.tgz#d7c72900f4cab8646cf42dca82538d029e1fad7a"
   dependencies:
     abstract-leveldown "^3.0.0"
     mysql "^2.15.0"
