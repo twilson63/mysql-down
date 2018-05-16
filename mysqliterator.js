@@ -5,7 +5,7 @@ const mysql = require('mysql')
 const sqlHelper = require('./sql')
 const R = require('ramda')
 
-function MysqlIterator(db, options) {
+function MysqlIterator (db, options) {
   let query = []
   let start = R.gt(R.length(options.start), 0)
     ? mysql.escape(options.start)
@@ -87,14 +87,14 @@ function MysqlIterator(db, options) {
 
 util.inherits(MysqlIterator, AbstractIterator)
 
-MysqlIterator.prototype._next = function(callback) {
+MysqlIterator.prototype._next = function (callback) {
   var self = this,
     obj = this._stream.read(),
-    onReadable = function() {
+    onReadable = function () {
       self._stream.removeListener('end', onEnd)
       self._next(callback)
     },
-    onEnd = function() {
+    onEnd = function () {
       self._stream.removeListener('readable', onReadable)
       callback()
     },
@@ -118,7 +118,7 @@ MysqlIterator.prototype._next = function(callback) {
   }
 }
 
-MysqlIterator.prototype._end = function(callback) {
+MysqlIterator.prototype._end = function (callback) {
   // forcing the stream to end is causing a bug
   // because mysql can not abort a stream...
   // this._stream.end()
