@@ -4,7 +4,7 @@
   "main": "adapter.js",
   "license": "MIT",
   "dependencies": {
-    "@twilson63/mysql-down": "^1.1.0",
+    "@twilson63/mysql-down": "^1.1.1",
     "pouchdb-adapter-leveldb-core": "^6.4.1",
     "pouchdb-core": "^6.4.1"
   },
