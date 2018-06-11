@@ -1,3 +1,4 @@
+require('dotenv').config()
 const mysqldown = require('./index')
 const levelup = require('levelup')
 const encode = require('encoding-down')
@@ -11,13 +12,15 @@ const encode = require('encoding-down')
 const db = levelup(
   encode(
     mysqldown(
-      JSON.stringify({
-        host: 'localhost',
-        port: 3306,
-        user: 'twilson63a',
-        password: 'foo/bar',
-        path: 'mymwa/foobar'
-      })
+      'json://' +
+        JSON.stringify({
+          host: 'localhost',
+          port: 3306,
+          user: 'twilson63a',
+          password: 'foo/bar',
+          database: 'mymwa',
+          table: 'foobar'
+        })
     ),
     {
       valueEncoding: 'json'
@@ -35,6 +38,6 @@ db
     console.log('key', data.key.toString())
     console.log('value', data.value)
   })
-  .on('close', function () {
+  .on('close', function() {
     console.log('it is over now')
   })

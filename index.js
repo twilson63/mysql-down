@@ -11,16 +11,69 @@ const R = require('ramda')
 let instances = {}
 
 const getTable = R.compose(R.nth(-1), R.split('/'))
+const isJSON = R.contains('json://')
+const isMySQL = R.contains('mysql://')
+const parseJSON = R.compose(
+  location => JSON.parse(location),
+  R.replace('json://', '')
+)
 
 function MysqlDOWN(location) {
   if (!(this instanceof MysqlDOWN)) {
     return new MysqlDOWN(location)
   }
 
+  let connectionData = 'mysql://root@localhost:3306/default/me'
+
   AbstractLevelDOWN.call(this, location)
   let parsed = null
   let parsedPath = null
+  // env vars override all connection info
+  if (process.env.MYSQL_URI) {
+    location = process.env.MYSQL_URI
+  }
 
+  if (isJSON(location)) {
+    try {
+      connectionData = parseJSON(location)
+    } catch (err) {
+      throw new Error('PARSE ERROR: COULD NOT PARSE Connection Object')
+    }
+
+    this.table = connectionData.table
+    this.database = connectionData.database
+    connectionData.multipleStatements = true
+    connectionData.hostname = connectionData.host
+  } else if (isMySQL(location)) {
+    connectionData = R.evolve(
+      {
+        hostname: v => (R.isNil(v) ? 'localhost' : v),
+        port: v => (R.isNil(v) ? 3306 : v),
+        auth: v => (R.isNil(v) ? 'root' : v)
+      },
+      url.parse(location)
+    )
+    const [empty, database, table] = R.split('/', connectionData.path)
+    const [uid, pass] = R.split(':', connectionData.auth)
+    this.table = table
+    this.database = connectionData.database = database
+    connectionData.multipleStatements = true
+    connectionData.user = uid
+    connectionData.password = pass || ''
+    connectionData = R.pick(
+      [
+        'hostname',
+        'port',
+        'user',
+        'password',
+        'multipleStatements',
+        'database'
+      ],
+      connectionData
+    )
+  }
+
+  /*
   if (process.env.MYSQL_URI) {
     this.table = getTable(location)
     location = process.env.MYSQL_URI
@@ -61,14 +114,17 @@ function MysqlDOWN(location) {
       parsed.password = R.or(R.head(R.tail(auth)), '')
     }
   }
+  */
 
-  this.connInfo = {
-    host: parsed.hostname,
-    port: parsed.port,
-    user: parsed.user,
-    password: parsed.password,
-    multipleStatements: true
-  }
+  // this.connInfo = {
+  //   host: parsed.hostname,
+  //   port: parsed.port,
+  //   user: parsed.user,
+  //   password: parsed.password,
+  //   multipleStatements: true
+  // }
+
+  this.connInfo = connectionData
 
   if (process.env.MYSQL_SSL) {
     this.connInfo = R.merge(this.connInfo, {
@@ -82,10 +138,10 @@ function MysqlDOWN(location) {
     })
   }
 
-  this.database = R.head(parsedPath)
-  if (!this.table) {
-    this.table = R.head(R.tail(parsedPath))
-  }
+  // this.database = R.head(parsedPath)
+  // if (!this.table) {
+  //   this.table = R.head(R.tail(parsedPath))
+  // }
   if (process.env.DEBUG) {
     console.log('connection', this.connInfo)
     console.log('database', this.database)
