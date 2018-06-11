@@ -2,10 +2,27 @@ const mysqldown = require('./index')
 const levelup = require('levelup')
 const encode = require('encoding-down')
 
+// const db = levelup(
+//   encode(mysqldown('mysql://root@localhost:3306/beep/foo2'), {
+//     valueEncoding: 'json'
+//   })
+// )
+
 const db = levelup(
-  encode(mysqldown('mysql://root@localhost:3306/beep/foo2'), {
-    valueEncoding: 'json'
-  })
+  encode(
+    mysqldown(
+      JSON.stringify({
+        host: 'localhost',
+        port: 3306,
+        user: 'twilson63a',
+        password: 'foo/bar',
+        path: 'mymwa/foobar'
+      })
+    ),
+    {
+      valueEncoding: 'json'
+    }
+  )
 )
 
 db.put(1, { bar: 'bam' }).then(() => {
