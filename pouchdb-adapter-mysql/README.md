@@ -7,34 +7,16 @@ LevelDOWN Adapter for running pouchdb and pouchdb server using an mysql backend.
 ```js
 const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('pouchdb-adapter-mysql'))
-const db = PouchDB('MYSQL:root@localhost:3306/database/table', {
-  adapter: 'mysql'
-})
-
-db
-  .allDocs({ include_docs: true })
-  .then(res => console.log(JSON.stringify(res, null, 2)))
-```
-
-Or you can use JSON Connection String
-
-```js
-const PouchDB = require('pouchdb-core')
-PouchDB.plugin(require('pouchdb-adapter-mysql'))
-const db = PouchDB(
-  'JSON:' +
-    JSON.stringify({
-      host: 'localhost',
-      port: 3306,
-      database: 'database',
-      table: 'table',
-      user: 'root',
-      password: ''
-    }),
-  {
-    adapter: 'mysql'
+const db = PouchDB('dbname', {
+  adapter: 'mysql',
+  prefix: {
+    host: 'localhost',
+    port: 3306,
+    user: 'testuser',
+    password: 'testpassword',
+    database: 'test'
   }
-)
+})
 
 db
   .allDocs({ include_docs: true })
@@ -49,23 +31,20 @@ You can also run PouchDB Server
 var PouchDB = require('pouchdb')
 PouchDB.plugin(require('pouchdb-adapter-mysql'))
 const MPouchDB = PouchDB.defaults({
-  adapter: 'mysql'
+  adapter: 'mysql',
+  prefix: {
+    host: 'localhost',
+    port: 3306,
+    user: 'testuser',
+    password: 'testpassword',
+    database: 'test'
+  }
 })
 var express = require('express')
 var app = express()
 
 app.use(require('express-pouchdb')(MPouchDB))
-const db = MPouchDB(
-  'JSON:' +
-    JSON.stringify({
-      host: 'localhost',
-      port: 3306,
-      database: 'database',
-      table: 'table',
-      user: 'root',
-      password: ''
-    })
-)
+const db = MPouchDB('dbname')
 
 app.listen(3000)
 ```

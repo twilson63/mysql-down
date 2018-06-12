@@ -3,19 +3,18 @@ const test = require('tape')
 const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('../adapter'))
 PouchDB.plugin(require('pouchdb-mapreduce'))
-const db = PouchDB(
-  'JSON:' +
-    JSON.stringify({
-      host: 'localhost',
-      port: 3306,
-      database: 'test',
-      table: 'design_docs1',
-      user: 'root'
-    }),
-  {
-    adapter: 'mysql'
-  }
-)
+
+let prefix = {
+  host: 'localhost',
+  port: 3306,
+  database: 'test',
+  user: 'root'
+}
+
+let db = PouchDB('design_docs1', {
+  adapter: 'mysql',
+  prefix
+})
 
 test('design_docs', t => {
   const doc = {
