@@ -3,9 +3,8 @@ const test = require('tape')
 const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('../adapter'))
 PouchDB.plugin(require('pouchdb-mapreduce'))
-const db = PouchDB('design_docs_query', {
-  adapter: 'mysql',
-  prefix: 'test/'
+const db = PouchDB('MYSQL:root@localhost:3306/test/query', {
+  adapter: 'mysql'
 })
 
 const doc = {

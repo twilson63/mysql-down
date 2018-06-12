@@ -1,11 +1,21 @@
 const test = require('tape')
 const { has } = require('ramda')
-
+let testdb = 'test2'
 const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('../adapter'))
-const db = PouchDB('mysql://root@localhost:3306/test/basics', {
-  adapter: 'mysql'
-})
+const db = PouchDB(
+  'JSON:' +
+    JSON.stringify({
+      host: 'localhost',
+      port: 3306,
+      database: testdb,
+      table: 'basics',
+      user: 'root'
+    }),
+  {
+    adapter: 'mysql'
+  }
+)
 
 test('add a doc', t => {
   db.post({ test: 'somestuff' }, err => {
@@ -103,10 +113,19 @@ test('bulk docs', t => {
 
 test('basic checks', t => {
   t.plan(7)
-  const db = PouchDB('basic-checks', {
-    adapter: 'mysql',
-    prefix: 'test/'
-  })
+  const db = PouchDB(
+    'JSON:' +
+      JSON.stringify({
+        host: 'localhost',
+        port: 3306,
+        database: testdb,
+        table: 'basic-checks',
+        user: 'root'
+      }),
+    {
+      adapter: 'mysql'
+    }
+  )
   const doc = { _id: '0', a: 1, b: 1 }
 
   let updateSeq
@@ -195,19 +214,37 @@ test('put doc with bad reserved id', t => {
 
 test('update_seq persists', t => {
   t.plan(2)
-  let db = PouchDB('update_seq', {
-    adapter: 'mysql',
-    prefix: 'test/'
-  })
+  let db = PouchDB(
+    'JSON:' +
+      JSON.stringify({
+        host: 'localhost',
+        port: 3306,
+        database: testdb,
+        table: 'update_seq',
+        user: 'root'
+      }),
+    {
+      adapter: 'mysql'
+    }
+  )
 
   db
     .post({ test: 'somestuff' })
     .then(() => db.close())
     .then(() => {
-      db = PouchDB('update_seq', {
-        adapter: 'mysql',
-        prefix: 'test/'
-      })
+      db = PouchDB(
+        'JSON:' +
+          JSON.stringify({
+            host: 'localhost',
+            port: 3306,
+            database: testdb,
+            table: 'update_seq',
+            user: 'root'
+          }),
+        {
+          adapter: 'mysql'
+        }
+      )
       return db.info()
     })
     .then(info => {
@@ -233,13 +270,25 @@ test('error when doc is not an object', t => {
 
 test('db info', t => {
   t.plan(4)
-  let db = PouchDB('info', {
-    adapter: 'mysql',
-    prefix: 'test/'
-  })
+  let db = PouchDB(
+    'JSON:' +
+      JSON.stringify({
+        host: 'localhost',
+        port: 3306,
+        database: testdb,
+        table: 'info',
+        user: 'root'
+      }),
+    {
+      adapter: 'mysql'
+    }
+  )
 
   db.info().then(info => {
-    t.equals(info.db_name, 'info')
+    t.equals(
+      info.db_name,
+      'JSON:{"host":"localhost","port":3306,"database":"test2","table":"info","user":"root"}'
+    )
     t.equals(info.auto_compaction, false)
     t.equals(info.adapter, 'mysql')
     t.equals(info.doc_count, 0)
@@ -249,6 +298,20 @@ test('db info', t => {
 
 test('putting returns {ok: true}', t => {
   t.plan(5)
+  let db = PouchDB(
+    'JSON:' +
+      JSON.stringify({
+        host: 'localhost',
+        port: 3306,
+        database: testdb,
+        table: 'putting2',
+        user: 'root'
+      }),
+    {
+      adapter: 'mysql'
+    }
+  )
+
   db
     .put({ _id: '_local/foo' })
     .then(res => t.ok(res.ok))
@@ -256,10 +319,12 @@ test('putting returns {ok: true}', t => {
     .then(res => t.ok(res.ok))
     .then(() => db.bulkDocs([{ _id: '_local/bar' }, { _id: 'baz' }]))
     .then(res => {
+      console.log(res)
       t.equals(res.length, 2)
       t.ok(res[0].ok)
       t.ok(res[1].ok)
     })
+    .catch(err => t.equals(err.message, 'foo'))
 })
 
 test('done', t => {
