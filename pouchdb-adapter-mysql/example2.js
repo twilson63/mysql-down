@@ -6,9 +6,9 @@ const db = PouchDB('foobar', {
   prefix: {
     host: 'localhost',
     port: 3306,
-    user: 'twilson63a',
-    password: 'foo/bar',
-    database: 'mymwa'
+    user: 'root',
+    password: '',
+    database: 'beepboop'
   }
 })
 
