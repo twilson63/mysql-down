@@ -38,6 +38,6 @@ db
     console.log('key', data.key.toString())
     console.log('value', data.value)
   })
-  .on('close', function() {
+  .on('close', function () {
     console.log('it is over now')
   })

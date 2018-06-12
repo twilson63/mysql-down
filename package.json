@@ -19,7 +19,8 @@
     "tape": "^4.8.0"
   },
   "scripts": {
-    "test": "prettier-standard index.js sql.js mysqliterator.js example.js && tape test/test.js",
+    "test":
+      "prettier-standard index.js sql.js mysqliterator.js example.js && DEBUG=true tape test/test.js",
     "test-pouchdb": "./bin/test-pouchdb.sh"
   },
   "repository": "git@github.com:twilson63/mysql-down.git",

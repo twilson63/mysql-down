@@ -3,9 +3,8 @@ const { has } = require('ramda')
 
 const PouchDB = require('pouchdb-core')
 PouchDB.plugin(require('../adapter'))
-const db = PouchDB('basics', {
-  adapter: 'mysql',
-  prefix: 'test/'
+const db = PouchDB('mysql://root@localhost:3306/test/basics', {
+  adapter: 'mysql'
 })
 
 test('add a doc', t => {

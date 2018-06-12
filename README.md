@@ -12,6 +12,13 @@ npm install twilson63/mysql-down
 
 ## Connections
 
+Connecting to MySQL you have two options:
+
+* Supply a mysql:// uri
+* Supply a json:// object
+
+### MySQL URI
+
 When connecting you can supply a connection uri or `[db]/[table]` combination,
 if you just supply the db/table then it will assume the connection uri is the
 following `mysql://root@localhost:3306/db/table`.
@@ -46,6 +53,47 @@ db
     console.log('value', data.value)
   })
   .on('close', function () {
+    console.log('it is over now')
+  })
+```
+
+### MySQL JSON
+
+If you have passwords with slashes in them or use secret stores that store your connection info in a json object, you may want to use a stringified json object as the database name.
+
+Example:
+
+```js
+const db = levelup(
+  encode(
+    mysqldown(
+      'json://' +
+        JSON.stringify({
+          host: 'localhost',
+          port: 3306,
+          user: 'twilson63a',
+          password: 'foo/bar',
+          database: 'mydb',
+          table: 'foobar'
+        })
+    ),
+    {
+      valueEncoding: 'json'
+    }
+  )
+)
+
+db.put(1, { bar: 'bam' }).then(() => {
+  db.get(1).then(v => console.log(v.bar))
+})
+
+db
+  .createReadStream({ gt: 1 })
+  .on('data', data => {
+    console.log('key', data.key.toString())
+    console.log('value', data.value)
+  })
+  .on('close', function() {
     console.log('it is over now')
   })
 ```

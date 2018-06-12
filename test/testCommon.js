@@ -3,12 +3,36 @@ const mysql = require('mysql'),
     user: 'root',
     password: ''
   })
+
+connection.query('CREATE DATABASE IF NOT EXISTS leveldown')
+
 var dbidx = 0,
   location = function() {
-    return 'leveldown_test/_db_test_' + dbidx++
+    //return 'mysql://root@localhost:3306/leveldown/dbtest' + dbidx++
+    return (
+      'json://' +
+      JSON.stringify({
+        host: 'localhost',
+        database: 'leveldown',
+        port: 3306,
+        user: 'root',
+        password: '',
+        table: 'dbtest' + dbidx++
+      })
+    )
   },
   lastLocation = function() {
-    return 'leveldown_test/_db_test_' + dbidx
+    //return 'mysql://root@localhost:3306/leveldown/dbtest' + dbidx
+    return (
+      'json://' +
+      JSON.stringify({
+        host: 'localhost',
+        database: 'leveldown',
+        port: 3306,
+        user: 'root',
+        table: 'dbtest' + dbidx
+      })
+    )
   },
   cleanup = function(callback) {
     connection.query('drop database leveldown_test', function(err, results) {
